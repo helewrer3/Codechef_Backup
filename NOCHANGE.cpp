@@ -4,91 +4,50 @@
 #define MOD 1000000007
 using namespace std;
 
-ll n, p;
-vector<ll> arr;
-map<ll, ll> ans_arr;
-map<map<ll, ll>, ll> dp;
+ll N, P;
+vector <ll> arr;
 
 void Input(){
-    cin >> n >> p;
-    arr.clear();
-    ans_arr.clear();
-    arr.resize(n);
-    dp.clear();
+    cin >> N >> P;
+    arr.clear(); arr.resize(N);
     for(auto &z:arr)
         cin >> z;
 }
 
-bool isOverPay(){
-    for(ll i = 0; i < n; i++){
-        for(ll j = i; j < n; j++){
-            if(arr[j]%arr[i] > 0){
-                return true;
-            }
-        }
-    }
-
-    return (p%arr[arr.size()-1]);
-}
-
-void GetCombo(ll sum, map<ll, ll> temp_arr, ll ptr){
-
-    if(sum > p){
-        for(ll i = 0; i < n; i++){
-            if(temp_arr[i]){
-                if(sum - arr[i] >= p){
-                    return;
-                }
-            }
-        }
-
-        for(ll i = 0; i < n; i++){
-            ans_arr[i] = temp_arr[i];
-        }
-
-        return;
-    }
-    else if(sum == p or ptr >= n){
-        return;
-    }
-
-    GetCombo(sum, temp_arr, ptr+1);
-    temp_arr[ptr]++;
-    GetCombo(sum + arr[ptr], temp_arr, ptr+1);
-    GetCombo(sum + arr[ptr], temp_arr, ptr);
-
-}
-
 void Solve(){
-    sort(arr.begin(), arr.end());
-    map<ll, ll> temp_arr;
 
-    if(isOverPay()){
-        cout << "YES ";
-        for(ll i = 0; i < n; i++){
-            if(p%arr[i]){
-                ans_arr[i] = p/arr[i] + 1;
-                for(ll j = 0; j < n; j++){
-                	cout << ans_arr[j] << " ";
-                }
-                cout << endl;
-                return;
+    for(ll i = 0; i < N; i++){
+        if(P%arr[i] != 0){
+            cout << "YES\n";
+            for(ll j = 0; j < N; j++){
+                if(j == i)
+                    cout << P/arr[i] + 1 << " ";
+                else
+                    cout << "0 ";
             }
+            cout << "\n";
+            return;
         }
-
-        GetCombo(0, temp_arr, 0);
-
-        for(ll i = 0; i < n; i++){
-            cout << ans_arr[i] << " ";
-        }
-
-        cout << endl;
-    }
-    else{
-        cout << "NO" << endl;
     }
 
-    return;
+    for(ll i = 0; i < N-1; i++){
+        if(arr[i+1]%arr[i] != 0){
+            cout << "YES\n";
+            for(ll j = 0; j < N; j++){
+                if(j == i)
+                    cout << (P - arr[i+1])/arr[i] + 1 << " ";
+                else if(j == i+1)
+                    cout << "1 ";
+                else
+                    cout << "0 ";
+            }
+            cout << "\n";
+            return;
+        }
+    }
+
+    cout << "NO\n";
+
 }
 
 int main(){
