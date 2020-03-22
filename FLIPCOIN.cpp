@@ -5,53 +5,54 @@
 using namespace std;
 
 ll N, Q, T, L, R;
-vector<ll> arr_input, arr_tree, arr_lazy;
+vector<ll> arr_tree, arr_lazy;
 
 void UpdateTree(ll l, ll r, ll node, ll st, ll ed){
     ll mid = st + (ed - st)/2;
-    if(st > ed or l > ed or r < st){
-        return;
-    }
 
-    if(arr_lazy[node]){
+    if(arr_lazy[node]%2 == 1){
         arr_tree[node] = (ed - st + 1) - arr_tree[node];
         if(st != ed){
-            arr_lazy[2*node] != arr_lazy[2*node];
-            arr_lazy[2*node + 1] != arr_lazy[2*node + 1];
+            arr_lazy[2*node]++;
+            arr_lazy[2*node + 1]++;
         }
         arr_lazy[node] = 0;
+    }
+
+    if(st > ed or l > ed or r < st){
+        return;
     }
 
     if(l <= st and r >= ed){
         arr_tree[node] = (ed - st + 1) - arr_tree[node];
         if(st != ed){
-            arr_lazy[2*node] != arr_lazy[2*node];
-            arr_lazy[2*node + 1] != arr_lazy[2*node + 1];
+            arr_lazy[2*node]++;
+            arr_lazy[2*node + 1]++;
         }
-        return;
     }
+    else{
+        UpdateTree(l, r, 2*node, st, mid);
+        UpdateTree(l, r, 2*node + 1, mid + 1, ed);
 
-    UpdateTree(l, r, 2*node, st, mid);
-    UpdateTree(l, r, 2*node + 1, mid + 1, ed);
-
-    arr_tree[node] = arr_tree[2*node+1] + arr_tree[2*node];
+        arr_tree[node] = arr_tree[2*node] + arr_tree[2*node+1];
+    }
     return;
 }
 
 ll SumTree(ll l, ll r, ll node, ll st, ll ed){
     ll mid = st + (ed - st)/2;
-
-    if(st > ed or l > ed or r < st)
-        return 0;
     
-    if(arr_lazy[node]){
+    if(arr_lazy[node]%2 == 1){
         arr_tree[node] = (ed - st + 1) - arr_tree[node];
         if(st != ed){
-            arr_lazy[2*node] != arr_lazy[2*node];
-            arr_lazy[2*node + 1] != arr_lazy[2*node + 1];
+            arr_lazy[2*node]++;
+            arr_lazy[2*node + 1]++;
         }
         arr_lazy[node] = 0;
     }
+
+    if(st > ed or l > ed or r < st)
+        return 0;
 
     if(l <= st and r >= ed)
         return arr_tree[node];
@@ -60,7 +61,7 @@ ll SumTree(ll l, ll r, ll node, ll st, ll ed){
 }
 
 void Input(){
-    cin >> N >> Q, arr_input.resize(N), arr_tree.resize(2*N), arr_lazy.resize(2*N), fill(arr_input.begin(), arr_input.end(), 0), fill(arr_lazy.begin(), arr_lazy.end(), 0), fill(arr_tree.begin(), arr_tree.end(), 0);
+    cin >> N >> Q, arr_tree.resize(4*N), arr_lazy.resize(4*N), fill(arr_lazy.begin(), arr_lazy.end(), 0), fill(arr_tree.begin(), arr_tree.end(), 0);
 }
 
 void Solve(){
