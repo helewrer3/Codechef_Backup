@@ -18,15 +18,18 @@ void Solve(){
     }
     else{
         ll cnt = 0;
-        for(ll i = 1; i <= sqrt(X); i++){
-            if(X%i == 0){
-                cnt++;
-                if(X/i != i)
-                    cnt++;
-            }
-        }
+        for(ll i = 2; i*i <= X; i++){
+	        if(X%i != 0)
+                continue;
+	        while(X%i == 0){
+	            cnt++;
+	            X /= i;
+	        }
+	    }
+        if(X > 1)
+            cnt++;
 
-        if(cnt - K >= 0){
+        if(cnt >= K){
             cout << 1 << "\n";
             return;
         }

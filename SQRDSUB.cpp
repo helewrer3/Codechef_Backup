@@ -6,24 +6,32 @@ using namespace std;
 
 ll N;
 vector<ll> arr;
-
-bool MyComp(ll a, ll b){
-    return a > b;
-}
+map<ll, ll> mp_prod;
 
 void Input(){
-    cin >> N, arr.clear(), arr.resize(N);
+    cin >> N, arr.clear(), arr.resize(N), mp_prod.clear();
     for(auto &z:arr)
         cin >> z;
-    sort(arr.begin(), arr.end(), MyComp);
+    mp_prod[-1] = 1;
+    for(ll i = 0; i < N; i++)
+        mp_prod[i] = mp_prod[i-1]*arr[i];
 }
 
 void Solve(){
     ll ans = 0;
+    //Brute force
     for(ll i = 0; i < N; i++){
-        ans += max(0ll, arr[i] - i);
-        ans %= MOD;
+        for(ll j = i; j < N; j++){
+            if(((mp_prod[j]/mp_prod[i-1])%2 != 0) or ((mp_prod[j]/mp_prod[i-1])%4 == 0)){
+                ans++;
+            }
+        }
     }
+    //Brute force
+
+    //2 Pointer
+    //2 Pointer
+    
     cout << ans << "\n";
 }
 
