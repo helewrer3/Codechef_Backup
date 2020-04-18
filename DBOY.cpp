@@ -2,46 +2,62 @@
 #include <bits/stdc++.h>
 #define ll long long
 #define MOD 1000000007
+#define endl "\n"
+#define vll vector<long long>
+#define pll pair<long long, long long>
+#define all(c) c.begin(),c.end()
+#define f first
+#define s second
+#define inf INT_MAX
+#define size 10000000
+#define mem(a,val) memset(a,val,sizeof(a))
+
 using namespace std;
 
-ll N;
-vector<ll> arr_dst, arr_cst;
-map<ll, ll> cs_sm;
+ll N, mx;
+ll dp[size], arr_f[size], arr_h[size];
 
 void Input(){
-    cin >> N, arr_cst.clear(), arr_dst.clear(), arr_cst.resize(N), arr_dst.resize(N), cs_sm.clear();
-    for(auto &z:arr_dst)
-        cin >> z;
-    for(auto &z:arr_cst)
-        cin >> z;
-    cs_sm[-1] = 0;
-    cs_sm[0] = arr_cst[0];
-    for(ll i = 1; i < N; i++)
-        cs_sm[i] = arr_cst[i] + cs_sm[i=1];
+    cin >> N, mx = -inf;
+    for(ll i = 0; i < N; i++){
+        cin >> arr_h[i];
+        mx = max(mx, 2*arr_h[i]);
+    }
+
+    for(ll i = 0; i < N; i++)
+    	cin >> arr_f[i];
+
+    for(ll i = 0; i <= mx; i++)
+    	dp[i] = inf;
+
+    dp[0] = 0;
 }
 
 void Solve(){
-    ll ans = 0;
-    for(ll i = 0; i < N; i++){
-        for(ll j = 0; j < N; j++){
-            ll t_ans = INT_MAX;
-            for(ll k = N-1; k >= j; k--){
-                if(arr_dst[i]%(cs_sm[k] - cs_sm[j-1]) == 0){
-                    t_ans = min(t_ans, arr_dst[i]/(cs_sm[k] - cs_sm[j-1]));
-                }
-            }
-            ans += t_ans;
-    }
+	for(ll i = 0; i < N; i++){
+		for(ll j = 0; j+arr_f[i] <= mx; j++){
+			dp[j+arr_f[i]] = min(dp[j+arr_f[i]], 1+dp[j]);
+		}
+	}
 
-    cout << ans << "\n";
+	ll res = 0;
 
+	for(ll i = 0; i < N; i++){
+		res += dp[2*arr_h[i]];
+	}
+
+	cout << res << "\n";
 }
 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+    #ifndef ONLINE_JUDGE
+    	freopen("input.txt", "r", stdin);
+    	freopen("output.txt", "w", stdout);
+    #endif
 
-    ll T;
+    ll T = 1;
     cin >> T;
     while(T--){
         Input();
